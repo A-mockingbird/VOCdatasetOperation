@@ -20,6 +20,10 @@
   ## _DelAnnotations(self, delclass):
   删除数据集指定类别的全部标签信息<br>
   输入：delclass为列表，存储全部需要删除的标签<br>
+  ## _Countobject(self, annofile=None):
+  统计数据集中全部类别标签的数目
+  输入：annofile-xml文件目录，若为空，及为self.dataset_anno
+  返回：字典，{'类别名称': 统计数目, ...}
   ## _deletesinglefile(self, filepath, delclass):
   删除单个xml文件的指定类别标签<br>
   输入：filepath-xml文件地址<br>
