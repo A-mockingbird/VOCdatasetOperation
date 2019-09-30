@@ -45,7 +45,7 @@ class VOC(object):
         """
         annos = []
         if annodir == None:
-            annodir = self.dirname
+            annodir = self.dataset_anno
             annolist = self.listanno
         else:
             annolist = self._listanno(annodir)
@@ -147,8 +147,23 @@ class VOC(object):
         print('')
         print("crop is completed!")
     
-#    def _Countobject(self):
-#        for 
+    def _Countobject(self, annofile=None):
+        """
+        Count the label numbers of every class, and print it
+        Precondition: annofile-the direction of xml file
+        """
+        if annofile == None:
+            annofile = self.dataset_anno
+        annoparse = self._ParseAnnos(annofile)
+        count = {}
+        for anno in annoparse:
+            for obj in anno['info']:
+                if obj[0] in count:
+                    count[obj[0]] +=1
+                else:
+                    count[obj[0]] = 1
+        for c in count.items():
+            print("{}: {}".format(c[0], c[1]))
 
     def _DisplayDirectObjec(self):
         """
@@ -207,7 +222,7 @@ class VOC(object):
 
     def _Mergeannotation(self, newdataset, olddataset=None):
         if olddataset == None:
-            olddataset = self.dataset
+            olddataset = self.dataset_anno
         annolist1 = os.listdir(olddataset)
         annolist2 = os.listdir(newdataset)
         for anno in annolist2:
@@ -250,9 +265,10 @@ def appendobj(root, annotation):
     return root
 
 
-v = VOC('F:/史博强/xml/',)
+v = VOC('F:/数据集/20190104缺陷标注/xml/')
 #print(v._ParseAnnos())
 #v._Crop('F:/数据集/螺栓多标记数据集初建/JPEGImages/', 'F:/数据集/螺栓多标记数据集初建/crops/')
 #v._DelAnnotations(['bag-type suspension clamp', 'grading ring'])
 #v._DisplayDirectObjec()
-v._Mergeannotation('C:/Users/91279/Desktop/张真/xml/', 'F:/蒋志刚/xml/')
+#v._Mergeannotation('C:/Users/91279/Desktop/xml/', 'F:/xml/')
+v._Countobject()
