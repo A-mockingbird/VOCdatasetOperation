@@ -9,7 +9,7 @@
   dataset_anno-数据集存储标签的目录<br>
   dataset_img-数据集存储图像的目录，可为None<br>
   num_class-数据集类别数量，可为None(现在的实现均不需要)<br>
-## --主要方法<br>
+## 主要方法<br>
   ## _ParseAnnos(self, annodir=None):
   分析数据集标注信息，返回一个存储字典的列表,每个字典存在一个图想内的全部标签信息，<br>
   {'file':文件名, 'info': 标签类别和坐标, 'size': 图像尺寸}<br>
