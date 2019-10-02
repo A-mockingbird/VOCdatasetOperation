@@ -152,7 +152,7 @@ class VOC(object):
             numbers = [int(x) for x in inputstr.split(' ')]
             self._displayone(annos['info'], annos['file'], numbers)
         
-    def _displayone(self, objs, annofile, nums, score=[900, 1000], threshold=0.5):
+    def _displayone(self, objs, annofile, nums):
         """
         display the annotation's box of one image
         Precondition: objs-the box information
@@ -164,7 +164,6 @@ class VOC(object):
         ax.imshow(im, aspect='equal')
         for i, obj in enumerate(objs):
             if i in nums:
-                s = random.randint(score[0], score[1]) / 1000.0
                 bbox = obj[1:]
                 ax.add_patch(
                         plt.Rectangle((bbox[0], bbox[1]),
@@ -173,13 +172,10 @@ class VOC(object):
                           edgecolor='red', linewidth=3.5)
                         )
                 ax.text(bbox[0], bbox[1] - 2,
-                        '{:s} {:.3f}'.format(obj[0], s),
+                        '{:s}'.format(obj[0]),
                         bbox=dict(facecolor='blue', alpha=0.5),
                         fontsize=14, color='white')
 
-                ax.set_title(('detections with '
-                        'p(box) >= {:.1f}').format(threshold),
-                        fontsize=14)
         plt.axis('off')
         plt.tight_layout()
         plt.draw()
@@ -198,10 +194,10 @@ class VOC(object):
             else:
                 shutil.copy(newdataset+anno, olddataset+anno)
 
-v = VOC('F:/数据集/优化后金具数据集/aaaa/')
-print(v._ParseAnnos())
-#v._Crop('F:/数据集/螺栓多标记数据集初建/JPEGImages/', 'F:/数据集/crops/')
+v = VOC('F:/数据集/aaaa/', 'F:/数据集/bbbb/')
+#print(v._ParseAnnos())
+#v._Crop('F:/数据集/JPEGImages/', 'F:/数据集/crops/')
 #v._DelAnnotations(['123', '234'])
-#v._DisplayDirectObjec()
+v._DisplayDirectObjec()
 #v._Mergeannotation('C:/Users/91279/Desktop/xml/', 'F:/xml/')
 #v._DelAnnotations(['123'])
