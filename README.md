@@ -1,4 +1,6 @@
 # VOCtype-datasetOperation<br>
+  包含解析VOC数据集、删除指定类别标签，修改指定类别标签名称、批量合并不同标签文件、
+  剪裁目标图像、画出图中标注框、统计数据集各类别标签数目
   说明文档由中文写作，代码中为英文注释
   The documentation is written in Chinese and the code is in English.
 # 文件名：
@@ -17,7 +19,7 @@
   'info'为列表的列表，[[类名, xmin, ymin, xmax, ymax]]<br>
   'size'为元组,(宽，高)<br>
   输入：annodir-xml文件存储目录，可为空，空self.dataset_anno<br>
-  输出：列表[[类名, xmin, ymin, xmax, ymax]]<br>
+  输出：列表[[类名, xmin, ymin, xmax, ymax], ...]<br>
   ## _DelAnnotations(self, delclass, annodir=None):
   删除数据集指定类别的全部标签信息<br>
   输入：delclass-列表，存储全部需要删除的类别名称，['1', '2', ...]<br>
