@@ -1,6 +1,8 @@
 # VOCtype-datasetOperation<br>
   包含解析VOC数据集、删除指定类别标签，修改指定类别标签名称、批量合并不同标签文件、<br>
   剪裁目标图像、画出图中标注框、统计数据集各类别标签数目<br>
+  Parse VOC dataset, Delete or Correct direction class label, Merge different label file, <br>
+  Crop object in image, Draw the box of object in image, Statistic the number of label.
   说明文档由中文写作，代码中为英文注释<br>
   The documentation is written in Chinese and the code is in English.
 # 文件名：
