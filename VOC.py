@@ -13,9 +13,10 @@ import shutil
 import VOCOperationLibrary as vol
 
 class VOC(object):
-    def __init__(self, dataset_anno, dataset_img=None, num_class=None):
+    def __init__(self, dataset_anno, dataset_img=None, num_class=None, datasetdir=None):
         if os.path.exists(dataset_anno) == False:
             raise  FileNotFoundError
+        self.dataset = datasetdir
         self.dataset_anno = dataset_anno
         self.dataset_img = dataset_img
         self.num_class = num_class
@@ -212,7 +213,7 @@ class VOC(object):
             img_path = os.path.join(imgdir, f)[:-4] + '.jpg'
             img = Image.open(img_path)
             img = img.resize(newsize)
-            img.save(img_path, 'jpeg')
+            img.save(img_path, 'jpeg', quality=95)
             img.close()
             vol._changeone(anno_path, None, None, newsize)
             process = int(num*100 / total)
@@ -225,7 +226,42 @@ class VOC(object):
         print('')
         print('Resize is complete!')
 
-    def _Splitdataset(self, annodir=None, imgdir=None):
+    def _Splitdataset(self, traintxt, savedir, annodir=None, imgdir=None):
+        if annodir == None:
+            annodir = self.dataset_anno
+        if imgdir == None:
+            if self.dataset_img == None:
+                print("Please give the path of image!")
+            else:
+                imgdir = self.dataset_img
+        annolist = self._listanno(annodir)
+        f = open(traintxt, 'r')
+        trainlist = f.readlines()
+        f.close()
+        train_xml_path = os.path.join(savedir, 'trainAnnotations')
+        trian_img_path = os.path.join(savedir, 'trainJPEGImages')
+        test_xml_path = os.path.join(savedir, 'testAnnotations')
+        test_img_path = os.path.join(savedir, 'testJPEGImages')
+        if os.path.exists(train_xml_path) == False:
+            os.mkdir(train_xml_path)
+        if os.path.exists(trian_img_path) == False:
+            os.mkdir(trian_img_path)
+        if os.path.exists(test_xml_path) == False:
+            os.mkdir(train_xml_path)
+        if os.path.exists(test_img_path) == False:
+            os.mkdir(test_img_path)
+        for i, xml in enumerate(trainlist):
+            xml = xml.replace('\n', '')
+            shutil.copyfile(os.path.join(annodir, xml), 
+                        os.path.join(train_xml_path, xml))
+            shutil.copyfile(os.path.join(annodir, xml)[:-4] + '.jpg', 
+                        os.path.join(train_img_path, xml)[:-4] + '.jpg')
+            annolist.remove(xml)
+        for i, xml in enumerate(annolist):
+            shutil.copyfile(os.path.join(annodir, xml), 
+                        os.path.join(test_xml_path, xml))
+            shutil.copyfile(os.path.join(annodir, xml)[:-4] + '.jpg', 
+                        os.path.join(test_img_path, xml)[:-4] + '.jpg')
 
 v = VOC('F:/数据集/变电站设备缺陷标注-20190930-resize/xml', 'F:/数据集/变电站设备缺陷标注-20190930-resize/image')
 #print(v._ParseAnnos())

@@ -97,7 +97,7 @@ def _changeone(annofile, oldcls, newcls, newsize=None):
                                     coordinate.text = str(int(int(coordinate.text) * sizechangerate_y))
                                 if 'ymax' in coordinate.tag:
                                     coordinate.text = str(int(int(coordinate.text) * sizechangerate_y))
-                            print(os.path.basename(annofile)+' change the image size')
+                        
         tree = ET.ElementTree(root)
         tree.write(annofile, encoding="utf-8", xml_declaration=True)
 
