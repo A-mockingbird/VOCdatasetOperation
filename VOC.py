@@ -28,11 +28,16 @@ class VOC(object):
             annodir = self.dataset_anno
         return os.listdir(annodir)
 
-    def _listimg(self):
+    def _lowextension(self, imgdir=None):
+
+    def _listimg(self, imgdir=None):
         """return the list of all above of image file"""
         if self.dataset_img == None:
-            print("you should give a image path of dataset in creating VOC class!")
-            raise FileNotFoundError
+            if imgdir == None:
+                print("you should give a image path of dataset in creating VOC class!")
+                raise FileNotFoundError
+            else:
+                return os.listdir(imgdir)
         else:
             return os.listdir(self.dataset_img)
 
@@ -40,7 +45,7 @@ class VOC(object):
         """
         return the information of all above of annotation in this dataset_anno,
         format: a list of dictionary, include file name, annotation, size
-        ([{file, annotation, size}])
+        ([{'file', 'info', 'size'}])
         annotation is a list, [cls, xmin, ymin, xmax, ymax]
         size if a tuple, (weight, height)
         """
@@ -70,16 +75,12 @@ class VOC(object):
         for annofile in annolist:
             vol._deletesinglefile(os.path.join(annodir, annofile), delclass)
 
-
-
     def _ChangeAnnotation(self, oldcls, newcls, annodir=None):
         if annodir == None:
             annodir = self.dataset_anno
         annolist = self._listanno(annodir)
         for annofile in annolist:
             vol._changeone(os.path.join(annodir,annofile), oldcls, newcls)
-
-    
 
     def _Crop(self, imgdir, cropdir, annos=None):
         """
@@ -194,10 +195,44 @@ class VOC(object):
             else:
                 shutil.copy(newdataset+anno, olddataset+anno)
 
-v = VOC('F:/数据集/aaaa/', 'F:/数据集/bbbb/')
+    def _Resize(self, newsize, annodir=None, imgdir=None):
+        if annodir == None:
+            annodir = self.dataset_anno
+        if imgdir == None:
+            imgdir = self.dataset_img
+            if imgdir == None:
+                print('Resize operation need a image direction!')
+                return
+        annolist = self._listanno(annodir)
+        imglist = self._listimg(imgdir)
+        annos = self._ParseAnnos(annodir)
+        total = len(annolist)
+        for num, f in enumerate(annolist):
+            anno_path = os.path.join(annodir, f)
+            img_path = os.path.join(imgdir, f)[:-4] + '.jpg'
+            img = Image.open(img_path)
+            img = img.resize(newsize)
+            img.save(img_path, 'jpeg')
+            img.close()
+            vol._changeone(anno_path, None, None, newsize)
+            process = int(num*100 / total)
+            s1 = "\r%d%%[%s%s]"%(process,"*"*process," "*(100-process))
+            s2 = "\r%d%%[%s]"%(100,"*"*100)
+            sys.stdout.write(s1)
+            sys.stdout.flush()
+        sys.stdout.write(s2)
+        sys.stdout.flush()
+        print('')
+        print('Resize is complete!')
+
+    def _Splitdataset(self, annodir=None, imgdir=None):
+
+v = VOC('F:/数据集/变电站设备缺陷标注-20190930-resize/xml', 'F:/数据集/变电站设备缺陷标注-20190930-resize/image')
 #print(v._ParseAnnos())
 #v._Crop('F:/数据集/JPEGImages/', 'F:/数据集/crops/')
 #v._DelAnnotations(['123', '234'])
-v._DisplayDirectObjec()
+#v._DisplayDirectObjec()
+size = (512, 512)
+v._Resize(size)
 #v._Mergeannotation('C:/Users/91279/Desktop/xml/', 'F:/xml/')
 #v._DelAnnotations(['123'])

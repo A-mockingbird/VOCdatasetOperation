@@ -61,27 +61,50 @@ def _deletesinglefile(annofile, delclass):
     tree = ET.ElementTree(root)
     tree.write(annofile, encoding="utf-8", xml_declaration=True)
 
-def _changeone(annofile, oldcls, newcls):
+def _changeone(annofile, oldcls, newcls, newsize=None):
         if os.path.exists(annofile) == False:
             raise FileNotFoundError
         tree = ET.parse(annofile)
         root = tree.getroot()
         annos = [anno for anno in root.iter()]
         for i, anno in enumerate(annos):
+            if newsize != None:
+                if 'width' in anno.tag:
+                    oldwidth = float(anno.text)
+                    anno.text = str(newsize[0])
+                    sizechangerate_x = newsize[0] / oldwidth
+                if 'height' in anno.tag:
+                    oldheight = float(anno.text)
+                    anno.text = str(newsize[1])
+                    sizechangerate_y = newsize[1] / oldheight
+
             if 'object' in anno.tag:
                 for element in list(anno):
-                    if 'name' in element.tag:
-                        if element.text == oldcls:
-                            element.text = newcls
-                            print(os.path.basename(annofile)+' have something changed')
-                    break
+                    if oldcls != newcls:
+                        if 'name' in element.tag:
+                            if element.text == oldcls:
+                                element.text = newcls
+                                print(os.path.basename(annofile)+' change the class name')
+                        break
+                    if newsize != None:
+                        if 'bndbox' in element.tag:
+                            for coordinate in list(element):
+                                if 'xmin' in coordinate.tag:
+                                    coordinate.text = str(int(int(coordinate.text) * sizechangerate_x))
+                                if 'xmax' in coordinate.tag:
+                                    coordinate.text = str(int(int(coordinate.text) * sizechangerate_x))
+                                if 'ymin' in coordinate.tag:
+                                    coordinate.text = str(int(int(coordinate.text) * sizechangerate_y))
+                                if 'ymax' in coordinate.tag:
+                                    coordinate.text = str(int(int(coordinate.text) * sizechangerate_y))
+                            print(os.path.basename(annofile)+' change the image size')
         tree = ET.ElementTree(root)
         tree.write(annofile, encoding="utf-8", xml_declaration=True)
 
 def _mergeone(anno1, anno2):
         tree = ET.parse(anno1)
         root = tree.getroot()
-        annos, size = self._parseannotation(anno2)
+        annos, size = _parseannotation(anno2)
         if annos == None:
             return
         for annotation in annos:
