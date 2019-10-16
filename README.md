@@ -49,6 +49,11 @@
   此方法的意义：多人分工标注时，将不同人标注的数据合并(例如没人标一类的情况下)
   输入:newdataset-需要合并的新数据集<br>
        olddataset-需要合并的旧数据集，合并后数据存放在此数据集中<br>
+  ##_Resize(self, newsize, annodir=None, imgdir=None):
+  resize数据集中全部图像，并修改标注信息<br>
+  输入:newsize-rezise的尺寸，元组，(宽, 高)<br>
+       annodir-标注xml文件目录<br>
+       imgdir-图像文件目录<br>
  # --VOC数据集xml文件操作函数库
   ## _parseannotation(annofile):
   分析单个xml文件标注信息，<br>
@@ -58,8 +63,9 @@
   删除单个xml文件的指定类别标签<br>
   输入：annofile-xml文件地址<br>
         declass-删除的标签类别名称列表<br>
-  ## _changeone(annofile, oldcls, newcls):
-  修改单个xml文件中指定类别名称<br>
+  ## _changeone(annofile, oldcls, newcls, newsize=None):
+  修改单个xml文件标注信息，当oldcls!=newcls时，可修改指定类别名称<br>
+  当newsize!=None时，可修改resize图像后的标注信息<br>
   输入：annofile-xml文件路径<br>
         oldcls-需修改的类别名称<br>
         newcls-修改后的类别名称<br>
