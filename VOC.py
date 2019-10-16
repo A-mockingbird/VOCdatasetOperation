@@ -77,6 +77,13 @@ class VOC(object):
             vol._deletesinglefile(os.path.join(annodir, annofile), delclass)
 
     def _ChangeAnnotation(self, oldcls, newcls, annodir=None):
+        """
+        Change class name.
+        Precondition:
+                    oldcls:old class name,string
+                    newcls:new class name,string
+                    annodir:annotation file direction, if it is None,use self.dataset_dir(init value)
+        """
         if annodir == None:
             annodir = self.dataset_anno
         annolist = self._listanno(annodir)
@@ -185,6 +192,13 @@ class VOC(object):
 
 
     def _Mergeannotation(self, newdataset, olddataset=None):
+        """
+        Merge two dataset anntation information.
+        Precondition:
+                    newdataset:one dataset annotation path
+                    olddataset:one dataset annotation path 
+                               and save in this path
+        """
         if olddataset == None:
             olddataset = self.dataset_anno
         annolist1 = os.listdir(olddataset)
@@ -197,6 +211,14 @@ class VOC(object):
                 shutil.copy(newdataset+anno, olddataset+anno)
 
     def _Resize(self, newsize, annodir=None, imgdir=None):
+        """
+        Resize the dataset, include resize all the image into newsize,
+        and correct the annotation information.
+        Precondition:
+                    newsize:the newsize of image
+                    annodir:annotation direction
+                    imgdir:image direction
+        """
         if annodir == None:
             annodir = self.dataset_anno
         if imgdir == None:
@@ -227,6 +249,19 @@ class VOC(object):
         print('Resize is complete!')
 
     def _Splitdataset(self, traintxt, savedir, annodir=None, imgdir=None):
+        """
+        Split the dataset into train set and test set, according the train.txt.
+        Precondition:
+                    traintxt:train.txt which include the train set file name
+                    savedir:save direction
+                    annodir:dataset annotation direction
+                    imgdir:dataset image direction
+        Result:
+            make four direction, trainAnnotations(storage train set's xml file)
+                                 trainJPEGImages(storage train set's image file)
+                                 testAnnotations(storage test set's xml file)
+                                 testJPEGImages(storage test set's image file)
+        """
         if annodir == None:
             annodir = self.dataset_anno
         if imgdir == None:
@@ -268,7 +303,8 @@ v = VOC('F:/数据集/变电站设备缺陷标注-20190930-resize/xml', 'F:/数�
 #v._Crop('F:/数据集/JPEGImages/', 'F:/数据集/crops/')
 #v._DelAnnotations(['123', '234'])
 #v._DisplayDirectObjec()
-size = (512, 512)
-v._Resize(size)
+#size = (512, 512)
+#v._Resize(size)
 #v._Mergeannotation('C:/Users/91279/Desktop/xml/', 'F:/xml/')
 #v._DelAnnotations(['123'])
+v
