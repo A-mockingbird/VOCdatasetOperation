@@ -49,7 +49,7 @@
   此方法的意义：多人分工标注时，将不同人标注的数据合并(例如没人标一类的情况下)
   输入:newdataset-需要合并的新数据集<br>
        olddataset-需要合并的旧数据集，合并后数据存放在此数据集中<br>
-  ##_Resize(self, newsize, annodir=None, imgdir=None):
+  ## _Resize(self, newsize, annodir=None, imgdir=None):
   resize数据集中全部图像，并修改标注信息<br>
   输入:newsize-rezise的尺寸，元组，(宽, 高)<br>
        annodir-标注xml文件目录<br>
