@@ -5,7 +5,7 @@
   Crop object in image, Draw the box of object in image, Statistic the number of label,<br>
   resize all image in dataset and correct the annotation information(reszie dataset).<br>
   说明文档由中文写作，代码中为英文注释<br>
-  The documentation is written in Chinese and the code is in English.
+  The documentation is written in Chinese and the code comment is in English.
 # 文件名：
   VOCOpertationLibrary.py: VOC数据集中单个xml文件操作函数库<br>
   VOC.py：VOC数据集类，操作整个数据集<br>
