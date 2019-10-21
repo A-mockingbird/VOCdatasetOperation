@@ -295,6 +295,15 @@ class VOC(object):
         self._Copy(trainlist, annodir, imgdir, test_xml_path, test_img_path)    
 
     def _Copy(self, xml_list, from_xml_path, from_img_path, save_xml_dir, save_img_dir):
+        """
+        Copy the xml file and image file from dataset to save_xml_dir and save_img_dir.
+        Precondition:
+                    xml_list:a list of xml file name 
+                    from_xml_path:original xml direction
+                    from_img_path:original image direction
+                    save_xml_dir:to save xml direction
+                    save_img_dir:to save image direction
+        """
         for i, xml in enumerate(xml_list):
             shutil.copyfile(os.path.join(from_xml_path, xml), 
                         os.path.join(save_xml_dir, xml))
@@ -302,6 +311,13 @@ class VOC(object):
                         os.path.join(save_img_dir, xml)[:-4] + '.jpg')
 
     def _Find(self, cls, annodir=None):
+        """
+        Find files of the direction class object.
+        Return a list of files name.
+        Precondition:
+        cls: a list of class, example:['dog', 'cat']
+        annodir: the xml files direction
+        """
         if annodir == None:
             annodir = self.dataset_anno
         
@@ -314,6 +330,15 @@ class VOC(object):
         return xml_files
 
     def _FindandCopy(self, cls, save_xml_path, save_img_path, annodir=None, imgdir=None):
+        """
+        Find files of the direction class object and copy them.
+        Precondition:
+                    xml_list:a list of xml file name 
+                    annodir:the dataset xml files direction
+                    imgdir:the dataset image files direction
+                    save_xml_dir:to save xml direction
+                    save_img_dir:to save image direction
+        """
         if imgdir == None:
             imgdir = self.dataset_img
             if imgdir == None:
