@@ -30,6 +30,7 @@ class VOC(object):
         return os.listdir(annodir)
 
     def _lowextension(self, imgdir=None):
+        return
 
     def _listimg(self, imgdir=None):
         """return the list of all above of image file"""
@@ -285,20 +286,47 @@ class VOC(object):
             os.mkdir(train_xml_path)
         if os.path.exists(test_img_path) == False:
             os.mkdir(test_img_path)
-        for i, xml in enumerate(trainlist):
-            xml = xml.replace('\n', '')
-            shutil.copyfile(os.path.join(annodir, xml), 
-                        os.path.join(train_xml_path, xml))
-            shutil.copyfile(os.path.join(annodir, xml)[:-4] + '.jpg', 
-                        os.path.join(train_img_path, xml)[:-4] + '.jpg')
-            annolist.remove(xml)
-        for i, xml in enumerate(annolist):
-            shutil.copyfile(os.path.join(annodir, xml), 
-                        os.path.join(test_xml_path, xml))
-            shutil.copyfile(os.path.join(annodir, xml)[:-4] + '.jpg', 
-                        os.path.join(test_img_path, xml)[:-4] + '.jpg')
+        for i in range(len(trainlist)):
+            trainlist[i] = trainlist[i].replace('\n', '')
+            annolist.remove(trainlist[i])
+        testlist = annolist
+        
+        self._Copy(trainlist, annodir, imgdir, train_xml_path, trian_img_path)
+        self._Copy(trainlist, annodir, imgdir, test_xml_path, test_img_path)    
 
-v = VOC('F:/数据集/变电站设备缺陷标注-20190930-resize/xml', 'F:/数据集/变电站设备缺陷标注-20190930-resize/image')
+    def _Copy(self, xml_list, from_xml_path, from_img_path, save_xml_dir, save_img_dir):
+        for i, xml in enumerate(xml_list):
+            shutil.copyfile(os.path.join(from_xml_path, xml), 
+                        os.path.join(save_xml_dir, xml))
+            shutil.copyfile(os.path.join(from_img_path, xml)[:-4] + '.jpg', 
+                        os.path.join(save_img_dir, xml)[:-4] + '.jpg')
+
+    def _Find(self, cls, annodir=None):
+        if annodir == None:
+            annodir = self.dataset_anno
+        
+        annolist = self._listanno(annodir)
+        xml_files = []
+        for anno in annolist:
+            xml = vol._find_one(os.path.join(annodir, anno), cls)
+            if xml != None:
+                xml_files.append(xml)
+        return xml_files
+
+    def _FindandCopy(self, cls, save_xml_path, save_img_path, annodir=None, imgdir=None):
+        if imgdir == None:
+            imgdir = self.dataset_img
+            if imgdir == None:
+                print('Copy operation need a image direction!')
+                return
+        if annodir == None:
+            annodir = self.dataset_anno
+        xml_files = self._Find(cls, annodir)
+        print(xml_files)
+        self._Copy(xml_files, annodir, imgdir, save_xml_path, save_img_path)
+
+v = VOC('F:/数据集/20190122输电线路主要缺陷优化数据集/Annotations/', 
+       'F:/数据集/20190122输电线路主要缺陷优化数据集/JPEGImages/')
 #print(v._ParseAnnos())
 #v._Crop('F:/数据集/JPEGImages/', 'F:/数据集/crops/')
 #v._DelAnnotations(['123', '234'])
@@ -307,4 +335,5 @@ v = VOC('F:/数据集/变电站设备缺陷标注-20190930-resize/xml', 'F:/数�
 #v._Resize(size)
 #v._Mergeannotation('C:/Users/91279/Desktop/xml/', 'F:/xml/')
 #v._DelAnnotations(['123'])
-v
+#cls = ['shockproof hammer deformation', 'shockproof hammer intersection', 'grading ring damage', 'shielded ring corrosion']
+#v._FindandCopy(cls, 'F:/数据集/20190122输电线路主要缺陷优化数据集/aaaa/', 'F:/数据集/20190122输电线路主要缺陷优化数据集/bbbb/')

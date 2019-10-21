@@ -132,3 +132,21 @@ def appendobj(root, annotation):
     ymax.text = str(annotation[4])
     root.append(obj)
     return root
+
+def _find_one(annofile, cls):
+        if os.path.exists(annofile) == False:
+            raise FileNotFoundError
+
+        tree = ET.parse(annofile)
+        root = tree.getroot()
+        annos = [anno for anno in root.iter()]
+        
+        for i, anno in enumerate(annos):
+            if 'object' in anno.tag:
+                for element in list(anno):
+                        if 'name' in element.tag:
+                            if element.text in cls:
+                                return os.path.basename(annofile)
+                        break                
+        
+        
